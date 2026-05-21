@@ -1,15 +1,20 @@
-# 1. Creamos la estructura del nuevo repositorio
-mkdir -p ~/Proyectos_GitHub/avr-rtc-alarm/{src,docs}
+# Reloj Calendario RTC y Alarma por I2C (AVR)
 
-# 2. Movemos los .c y .h a src
-find /tmp/tp3_temp/ -name "*.c" -exec mv {} ~/Proyectos_GitHub/avr-rtc-alarm/src/ \;
-find /tmp/tp3_temp/ -name "*.h" -exec mv {} ~/Proyectos_GitHub/avr-rtc-alarm/src/ \;
+## Descripción del Proyecto
+Desarrollo de firmware en C para un microcontrolador AVR que implementa un reloj calendario con sistema de alarmas. El proyecto se comunica vía I2C con un módulo RTC DS3231 y cuenta con una interfaz de comandos serie (UART) para configuración y monitoreo.
 
-# 3. Movemos el archivo de simulación de Proteus a docs
-find /tmp/tp3_temp/ -name "New Project.pdsprj" -exec mv {} ~/Proyectos_GitHub/avr-rtc-alarm/docs/ \;
+*Nota: Proyecto desarrollado en equipo. Mi contribución principal fue el diseño de la concurrencia en la recepción UART, implementando un buffer circular para evitar el bloqueo del sistema durante la lectura de comandos.*
 
-# 4. Limpiamos la carpeta temporal
-rm -rf /tmp/tp3_temp/
+## Tecnologías y Periféricos
+* **Lenguaje:** C (Bare-metal)
+* **Protocolos:** I2C (Comunicación con RTC), UART (Interfaz con PC).
+* **Entorno:** Microchip Studio y simulación en Proteus.
 
-# 5. Entramos al nuevo repo
-cd ~/Proyectos_GitHub/avr-rtc-alarm/
+## Características Principales y Arquitectura
+* **Arquitectura Background/Foreground:** Sistema no bloqueante impulsado por interrupciones de recepción y transmisión UART.
+* **Buffer Circular (Ring Buffer):** Implementación de una cola circular para el almacenamiento temporal de los datos entrantes por UART, permitiendo el procesamiento asincrónico de comandos (`SET TIME`, `SET ALARM`, `ON`, `OFF`).
+* **Drivers Personalizados:** Desarrollo a medida para el control de los buses I2C y UART sin depender de librerías externas.
+
+## Estructura del Repositorio
+* `/src`: Código fuente modularizado (`I2C.c`, `RTC.c`, `UART.c`, `states.c`, `main.c`).
+* `/docs`: Archivo de simulación en formato Proteus (`.pdsprj`).
